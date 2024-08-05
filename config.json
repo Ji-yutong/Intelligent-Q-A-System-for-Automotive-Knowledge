@@ -1,0 +1,20 @@
+{
+  "embedding_model_path": "D:/pytorch project/汽车知识问答系统/all-MiniLM-L6-v2",
+  "llm_path": "./model/model_weight",
+  "rag_data_path": "D:/pytorch project/汽车知识问答系统/data/data.pdf",
+  "rag_retrieval_top_k": 1,
+
+  "chunk_size": 300,
+  "vector_dbindex_path": "./data/index.faiss",
+  "vector_vecotrs_path": "./data/vectors.npy",
+  "text_mapping_path": "./data/text_mapping.json",
+
+  "wiki_data_path": "path/to/wiki/data",
+  "tiny_bert_model_path": "D:/pytorch project/汽车知识问答系统/tinybert",
+  "knowledge_graph_search_number": 1,
+
+  "elasticsearch_host": "http://localhost:9200",
+  "elasticsearch_index": "sousuoyinqing",
+
+  "blip_model_path": "D:/pytorch project/汽车知识问答系统/blip_file"
+}

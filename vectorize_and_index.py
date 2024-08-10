@@ -8,15 +8,17 @@ import numpy as np
 
 # 加载配置文件
 with open('config.json', encoding='utf-8') as config_file:
-    config = json.load(config_file)  # 从配置文件中读取设置（例如数据路径、模型路径等）
+    config = json.load(config_file)
+
 
 # 读取pdf文档内容
 def pdf_to_text(pdf_path):
     doc = fitz.open(pdf_path)       # 打开PDF文件
-    text = ""                       # 初始化一个空字符串以存储PDF中的文本
-    for page in doc:                # 遍历PDF中的每一页
+    text = ""
+    for page in doc:
         text += page.get_text()     # 从每一页提取文本并累加到text字符串中
-    return text  # 返回提取的全部文本
+    return text
+
 
 # 生成知识库向量及索引
 def create_vector_index(texts, embedding_model_path, index_path, vector_data_path, text_mapping_path):
@@ -48,4 +50,6 @@ def create_vector_index(texts, embedding_model_path, index_path, vector_data_pat
 
 if __name__ == "__main__":
     text = pdf_to_text(config['rag_data_path'])  # 从配置中读取PDF路径，并提取PDF文本
-    create_vector_index(text, config['embedding_model_path'], config['vector_dbindex_path'], config['vector_vecotrs_path'], config['text_mapping_path'])  # 创建向量索引并保存 其中，vector_db_path如果报错找不到文件，则将绝对路径更换为相对路径
+
+    # 创建向量索引并保存 其中，vector_db_path如果报错找不到文件，则将绝对路径更换为相对路径
+    create_vector_index(text, config['embedding_model_path'], config['vector_dbindex_path'], config['vector_vectors_path'], config['text_mapping_path'])

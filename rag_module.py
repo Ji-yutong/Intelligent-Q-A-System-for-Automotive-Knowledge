@@ -1,12 +1,9 @@
 import faiss
 import json
-
-import numpy as np
 from transformers import AutoTokenizer, AutoModel
 import torch
-
-# 在新环境中解决冲突问题，去掉下面代码后是否报错？需要一个正确的库版本
 import os
+
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'TRUE'
 
 
@@ -17,10 +14,11 @@ with open('config.json', encoding='utf-8') as config_file:
 
 class RAGModule:
     def __init__(self):
-        self.tokenizer = AutoTokenizer.from_pretrained(config['embedding_model_path'])    # 加载tokenizer
-        self.model = AutoModel.from_pretrained(config['embedding_model_path'])            # 加载model
-        self.index = faiss.read_index(config['vector_dbindex_path'])                      # 加载FAISS索引文件
-        self.top_k = config['rag_retrieval_top_k']                                        # 加载top_k
+        # 加载模型
+        self.tokenizer = AutoTokenizer.from_pretrained(config['embedding_model_path'])
+        self.model = AutoModel.from_pretrained(config['embedding_model_path'])
+        self.index = faiss.read_index(config['vector_dbindex_path'])  # 加载FAISS索引文件
+        self.top_k = config['rag_retrieval_top_k']                    # 加载top_k
 
         # 加载文本块与索引的映射
         with open(config['text_mapping_path'], 'r', encoding='utf-8') as f:
@@ -44,9 +42,9 @@ class RAGModule:
 
 
 if __name__ == "__main__":
-    rag_module = RAGModule()                            # 实例化RAG模块
-    test_query = "汽车轮胎漏气时应该如何处理？"              # 定义测试查询文本
-    rag_indices = rag_module.query(test_query)              # 执行查询
+    rag_module = RAGModule()
+    test_query = "汽车轮胎漏气时应该如何处理？"
+    rag_indices = rag_module.query(test_query)
 
     # 从 FAISS 索引中提取具体文本
     rag_results_texts = rag_module.get_texts_from_indices(rag_indices[0])

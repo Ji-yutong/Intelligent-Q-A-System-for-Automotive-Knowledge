@@ -2,7 +2,6 @@ transformers==4.40.0
 faiss-cpu==1.8.0.post1
 numpy==1.26.0
 pillow==10.4.0
-python==3.12
 fitz==0.0.1.dev2
 elasticsearch==8.14.0
 torch==2.4.0
@@ -10,3 +9,9 @@ streamlit==1.37.0
 Wikipedia-API==0.6.0
 fuzzywuzzy==0.18.0
 wikipedia==1.4.0
+jieba==0.42.1
+scikit-learn==1.5.1
+protobuf==3.20.3
+paddlenlp==2.8.1
+paddlepaddle==2.4.0
+flask==2.2.5

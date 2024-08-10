@@ -2,7 +2,6 @@ import json
 import jieba
 import numpy as np
 from transformers import BertTokenizer, BertModel
-import wikipediaapi
 import wikipedia
 from sklearn.feature_extraction.text import TfidfVectorizer
 import torch
@@ -17,7 +16,7 @@ class KnowledgeGraph:
         # 初始化BERT模型和分词器
         self.tokenizer = BertTokenizer.from_pretrained(config['tiny_bert_model_path'])
         self.model = BertModel.from_pretrained(config['tiny_bert_model_path'])
-        self.model.eval()  # 设置模型为评估模式
+        self.model.eval()
 
     def extract_keywords(self, context):
         # 使用jieba进行中文分词
@@ -59,7 +58,7 @@ class KnowledgeGraph:
 
     def search_wikipedia(self, query):
         # 使用维基百科的 Python API 进行搜索
-        #search_results = self.wiki_api.search(query, results=config['knowledge_graph_search_number'])
+        # search_results = self.wiki_api.search(query, results=config['knowledge_graph_search_number'])
         search_results = wikipedia.search(query, results=config['knowledge_graph_search_number'])
         return search_results
 
@@ -83,7 +82,8 @@ class KnowledgeGraph:
 
         return all_results
 
+
 if __name__ == "__main__":
-    knowledge_graph = KnowledgeGraph()  # 实例化知识图谱
-    test_context = "美国奢侈品汽车品牌，例如法拉利、兰博基尼、保时捷等车在国际的排行榜中，谁的名气最高？"  # 使用中文标题进行测试
-    print(knowledge_graph.enrich(test_context))  # 使用知识图谱进行补充的内容
+    knowledge_graph = KnowledgeGraph()
+    test_context = "美国奢侈品汽车品牌，例如法拉利、兰博基尼、保时捷等车在国际的排行榜中，谁的名气最高？" 
+    print(knowledge_graph.enrich(test_context))

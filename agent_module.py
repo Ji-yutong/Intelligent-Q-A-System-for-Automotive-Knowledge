@@ -68,8 +68,7 @@ class Agent:
         # search_texts = [hit['_source']['content'] for hit in search_result['hits']['hits']]
 
         # RAG查询
-        rag_results_indices = self.rag_module.query(user_input)[0]  # 获取 RAG 查询结果的索引
-        rag_results_texts = self.rag_module.get_texts_from_indices(rag_results_indices)
+        rag_results_texts = self.rag_module.query(user_input)[0]  # 获取 RAG 查询结果的索引
         context = " ".join(rag_results_texts)
 
         # 使用知识图谱对本地文档进行补充
@@ -82,7 +81,8 @@ class Agent:
         prompt = (f"这是之前对话的总结:\n{dialog_summary}\n\n"
                   f"相关补充信息: {enriched_context}\n\n"
                   # f"搜索补充信息: {' '.join(search_texts)}\n\n"
-                  f"对于这个问题: {user_input}\n\n"f"有以下补充信息以供参考: {context}\n\n"
+                  f"对于这个问题: {user_input}\n\n"
+                  f"有以下补充信息以供参考: {context}\n\n"
                   "请你给出问题的回复：")
 
         # 使用 chatglm3-6b 模型生成最终的回复

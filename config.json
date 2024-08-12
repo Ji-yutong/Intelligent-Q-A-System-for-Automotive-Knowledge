@@ -6,6 +6,9 @@
   "cross-encoder_path": "./ms-marco-TinyBERT-L-2-v2",
   "rag_retrieval_top_k": 1,
 
+  "intent_model_path": "./bert",
+  "ner_model_path": "./nermodel",
+
   "chunk_size": 300,
   "vector_dbindex_path": "./data/index.faiss",
   "vector_vectors_path": "./data/vectors.npy",

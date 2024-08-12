@@ -5,8 +5,7 @@ from elasticsearch import Elasticsearch
 from rag_module import RAGModule
 from knowledge_graph import KnowledgeGraph
 from multimodal_module import MultimodalModule
-from transformers import AutoTokenizer, AutoModelForCausalLM
-from transformers import MT5Tokenizer, MT5ForConditionalGeneration
+from transformers import AutoTokenizer, AutoModelForCausalLM, AutoModelForTokenClassification, MT5Tokenizer, MT5ForConditionalGeneration
 import faiss
 import numpy as np
 
@@ -33,6 +32,11 @@ class Agent:
         self.vector_data = np.load(config['vector_vectors_path'])  # 读取向量数据文件路径
         self.mt5_tokenizer = MT5Tokenizer.from_pretrained(config['summary_model_path'])    # 加载tm5分词器
         self.mt5_model = MT5ForConditionalGeneration.from_pretrained(config['summary_model_path']).to(self.device)    # 加载tm5模型
+        # 初始化意图识别模型和实体命名识别模型：需要根据自己的任务预训练一个意图识别模型。
+        # self.intent_tokenizer = AutoTokenizer.from_pretrained(config['intent_model_path'])
+        # self.intent_model = AutoModelForCausalLM.from_pretrained(config['intent_model_path']).to(self.device)
+        # self.ner_tokenizer = AutoTokenizer.from_pretrained(config['ner_model_path'])
+        # self.ner_model = AutoModelForTokenClassification.from_pretrained(config['ner_model_path']).to(self.device)
         print('各模块初始化完成')
 
     def summarize_dialog_history(self, dialog_history):
@@ -50,6 +54,28 @@ class Agent:
         summary = self.mt5_tokenizer.decode(outputs[0], skip_special_tokens=True)
         return summary
 
+    # 意图识别函数
+    def predict_intent(self, text):
+        inputs = self.intent_tokenizer(text, return_tensors='pt').to(self.device)
+        with torch.no_grad():
+            outputs = self.intent_model(**inputs)
+        # 选择最可能的意图标签
+        predicted_class = torch.argmax(outputs.logits, dim=1).item()
+        return predicted_class
+
+    # 命名实体识别函数
+    def extract_entities(self, text):
+        inputs = self.ner_tokenizer(text, return_tensors='pt').to(self.device)
+        with torch.no_grad():
+            outputs = self.ner_model(**inputs)
+        predictions = torch.argmax(outputs.logits, dim=2)
+        tokens = self.ner_tokenizer.convert_ids_to_tokens(inputs['input_ids'][0])
+        entities = []
+        for token, prediction in zip(tokens, predictions[0].cpu().numpy()):
+            if prediction != 0:  # 0通常表示非实体
+                entities.append(token)
+        return entities
+
     def handle_query(self, user_input, image_path=None):
 
         if len(self.dialog_history) >= self.max_dialog_length:
@@ -62,6 +88,24 @@ class Agent:
 
         # 更新对话历史
         self.dialog_history.append({'user_input': user_input})
+
+        # 预测用户意图需要预训练意图识别模型。
+        # intent = self.predict_intent(user_input)
+        # print(f"用户意图: {intent}")  # 可以用来调试，查看意图预测结果
+        #
+        # if intent == 0:  # 假设0表示“汽车相关问题”
+        #     # 使用实体命名识别提取实体
+        #     entities = self.extract_entities(user_input)
+        #     search_query = " ".join(entities)
+        #     search_result = self.elasticsearch.search(index=config['elasticsearch_index'],
+        #                                               body={"query": {"match": {"content": search_query}}})
+        #     search_texts = [hit['_source']['content'] for hit in search_result['hits']['hits']]
+        #     # 添加搜索结果作为补充内容
+        #     context = " ".join(search_texts)
+        # else:
+        #     # RAG查询
+        #     rag_results_texts = self.rag_module.query(user_input)  # 获取 RAG 查询结果的文本块
+        #     context = " ".join(rag_results_texts)
 
         # 使用 Elasticsearch 搜索需要在本地安装Elasticsearch服务
         # search_result = self.elasticsearch.search(index=config['elasticsearch_index'], body={"query": {"match": {"content": user_input}}})

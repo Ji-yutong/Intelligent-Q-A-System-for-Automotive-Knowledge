@@ -80,16 +80,21 @@ python app.py
 
 **文件**：multimodal_module.py
 
-**模块功能**：加载 FAISS 索引和嵌入模型（应与构建本地知识库时使用的模型一致），对输入的查询文本进行向量编码，并从本地向量库中检索最相关的文本片段。通过 `config['rag_retrieval_top_k']` 参数可以调整检索的文档数量，以提供更多上下文信息来增强大模型的回复质量。
+**模块功能**：首先加载 FAISS 索引和嵌入模型（应与构建本地知识库时使用的模型一致），对输入的查询文本进行向量编码，并从本地向量库中进行初步匹配，得到初步召回的文档。之后使用通过 bi encoder 模型在初步召回的文本中进一步筛选，高级召回的文档。然后，使用 corss encoder 模型对高级找回的文档块进行重排序，得到最相关的文档内容作为 RAG 的补充结果。
 
 **embedding模型**：[sentence-transformers](https://huggingface.co/sentence-transformers)/[all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2)
+
+**bi encoder 模型**：[FacebookAI](https://huggingface.co/FacebookAI)/[roberta-base](https://huggingface.co/FacebookAI/roberta-base)
+
+**corss encoder 模型**：[cross-encoder](https://huggingface.co/cross-encoder)/[ms-marco-TinyBERT-L-2-v2](https://huggingface.co/cross-encoder/ms-marco-TinyBERT-L-2-v2)
 
 **config参数**：
 
 - `config['embedding_model_path']`：编码模型的本地路径。
 - `config['vector_dbindex_path']`：FAISS 索引文件路径。
-- `config['rag_retrieval_top_k']`：检索时返回的最匹配的向量块个数。
 - `config['text_mapping_path']`：文本块与索引的映射关系文件路径。
+- `config['roberta-base_path']`：bi encoder 模型文件路径。
+- `config['cross-encoder_path']`：corss encoder 模型文件路径。
 
 ### 5.知识图谱模块
 

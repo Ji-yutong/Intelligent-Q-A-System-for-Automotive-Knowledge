@@ -18,9 +18,9 @@ pip install -r requirements.txt
 python app.py
 ```
 
-##各模块细节信息
+## 各模块细节信息
 
-###1.构建本地知识库
+### 1.构建本地知识库
 
 **文件**：vectorize_and_index.py
 
@@ -64,7 +64,7 @@ python app.py
 - `config['vector_vectors_path']`：FAISS 向量数据文件路径。
 - `config['summary_model_path']`：mt5 摘要模型和分词器的路径。
 
-###3.多模态模块
+### 3.多模态模块
 
 **文件**：rag_module.py.py
 
@@ -76,7 +76,7 @@ python app.py
 
 - `config['blip_model_path']`：BLIP模型的本地路径。
 
-###4.rag模块
+### 4.rag模块
 
 **文件**：multimodal_module.py
 

@@ -2,6 +2,8 @@
 
 这是一个基于 `chatglm3-6b` 模型的汽车知识问答系统，集成了 RAG模块、多模态处理、Agent、知识图谱等技术，以提高大模型的回答质量和系统的智能性。系统支持文本和图片输入，能够提供详细的汽车相关信息。
 
+
+
 ## 如何部署项目
 
 1. **配置文件**：请确保在 `config.json` 中配置了正确的模型路径及参数。配置文件的详细说明见下节“各模块细节信息”。
@@ -17,6 +19,8 @@ pip install -r requirements.txt
 ```python
 python app.py
 ```
+
+
 
 ## 各模块细节信息
 
@@ -36,6 +40,8 @@ python app.py
 - `config['text_mapping_path']`：文本块与索引映射关系文件路径。
 - `config['rag_data_path']`：本地知识库文档路径。
 - `config['chunk_size']`：本地文档切分块的大小。
+
+
 
 ### 2.Agent模块
 
@@ -64,6 +70,8 @@ python app.py
 - `config['vector_vectors_path']`：FAISS 向量数据文件路径。
 - `config['summary_model_path']`：mt5 摘要模型和分词器的路径。
 
+
+
 ### 3.多模态模块
 
 **文件**：rag_module.py.py
@@ -75,6 +83,8 @@ python app.py
 **config参数**：
 
 - `config['blip_model_path']`：BLIP模型的本地路径。
+
+
 
 ### 4.rag模块
 
@@ -95,6 +105,8 @@ python app.py
 - `config['text_mapping_path']`：文本块与索引的映射关系文件路径。
 - `config['roberta-base_path']`：bi encoder 模型文件路径。
 - `config['cross-encoder_path']`：corss encoder 模型文件路径。
+
+
 
 ### 5.知识图谱模块
 
